@@ -7,7 +7,7 @@ const startQuestion =
         type: "list",
         name: "function_list",
         message: "Please Select the function you would like to perform?",
-        choices: ["View Employees", "Add Employee", "View Department", "Add Department", "View Employee Roles", "Add Employee Role", "Quit Program"]
+        choices: ["View Employees", "Add Employee", "View Department", "Add Department", "View Employee Roles", "Add Employee Role", "Update Employee Role", "Quit Program"]
     }
 
 const addDepartQuestion = 
@@ -43,6 +43,7 @@ const addEmployeeQuestion = [
     }
 ]
 
+//export all of the constants for the server file to use
 module.exports = {
     startQuestion: startQuestion,
     addRoleQuestion: addRoleQuestion,

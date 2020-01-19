@@ -5,10 +5,63 @@ module.exports.add_department = function (departmentName, connection) {
     connection.query(deptSQL, function (err, res) {
         if (err) throw err;
         return res;
-    })
+    });
 }
 
+module.exports.get_role_department_id = function (roleTitle, connection, callback) {
+
+    let roleAndDepartSQL = `
+    SELECT r.id as roleID, r.department_id as departmentID
+    FROM employee_role r
+    WHERE r.title = "${roleTitle}"
+    `
+    //create an array to hold the results from the above query
+    let dataResults = [];
+
+    //excute query and return results
+    connection.query(roleAndDepartSQL, function(err, res) {
+        if (err) callback(err, null);
+
+        dataResults.push(res[0].roleID, res[0].departmentID);
+
+        callback(null, dataResults);
+    });
+}
+
+module.exports.update_employee_role = function(roleTitle, roleSalary, roleID, currentDepartmentID, newDepartment, connection) {
+    
+    // This function will update an employee role based on the parameters above.
+
+    let newDepartSQL = `
+    SELECT id from department where department_name = "${newDepartment}";
+    `
+    connection.query(newDepartSQL, function(err, departmentID) {
+
+        if (err) throw err;
+        
+        let newDepartmentID = departmentID[0].id;
+
+        let updateRoleSQL = `
+        UPDATE employee_role
+        SET title = "${roleTitle}",
+            salary = ${roleSalary},
+            department_id = ${newDepartmentID}
+        WHERE employee_role.id = ${roleID} and employee_role.department_id = ${currentDepartmentID}
+        `
+
+        connection.query(updateRoleSQL, function(err, res) {
+            if (err) throw err;
+
+            return res;
+        });
+    });
+}
+
+
 module.exports.get_managers = function(connection, callback) {
+
+    // get a list of managers, also used in add employee.
+
     let managerSQL = `
     SELECT DISTINCT CONCAT(mgr.first_name, " ", mgr.last_name) as manager
     FROM employee e
@@ -31,7 +84,10 @@ module.exports.get_managers = function(connection, callback) {
     });
 }
 
+
 module.exports.add_employee = function(fName, lName, role, manager, connection) {
+
+    // function to add an employee
 
     let roleReqSQL = `SELECT id FROM employee_role WHERE title = "${role}"`;
 
@@ -40,6 +96,7 @@ module.exports.add_employee = function(fName, lName, role, manager, connection) 
 
         let roleID = roles[0].id;
 
+        // this part of the function determines if the employee is being added as a manager.
         if (manager === "Add as manager") {
             let employeeAddSQL = `
             INSERT INTO employee (first_name, last_name, role_id)
@@ -51,6 +108,7 @@ module.exports.add_employee = function(fName, lName, role, manager, connection) 
                 return res;
             });
         } else {
+            // gets the manager ID and links it to the manager/ employee.
             let managerGetSQL = `Select id from employee where CONCAT(first_name, " ", last_name) = "${manager}"`;
 
             connection.query(managerGetSQL, function(err, manager) {
@@ -127,8 +185,10 @@ module.exports.view_departments = function(connection, display, callback) {
 
 module.exports.view_employees = function(connection, callback) {
 
+    // This is creating an object for console.table to display.
+
     let employeeSQL = `
-    SELECT e.first_name, e.last_name, er.title, er.salary, ifnull(concat(mgr.first_name,"", mgr.last_name), "") as manager, department_name
+    SELECT e.first_name, e.last_name, er.title, er.salary, ifnull(concat(mgr.first_name," ", mgr.last_name), "") as manager, department_name
     FROM employee e
     JOIN employee_role er on e.role_id = er.id
     JOIN department d on er.department_id = d.id
@@ -149,6 +209,8 @@ module.exports.view_employees = function(connection, callback) {
         }
     
 module.exports.view_employeeRoles = function(connection, display, callback) {
+
+    // creates a table of employee roles and formats a display through console.table
 
     let roleSQL = `
         SELECT title, salary, department_name

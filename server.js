@@ -48,6 +48,9 @@ function start_program() {
             if (response.function_list == "Add Employee") {
                 add_employee();
             }
+            if (response.function_list == "Update Employee Role") {
+                update_employee_role();
+            }
             if (response.function_list == "Quit Program") {
                 console.log("");
                 console.log("******************************************************");
@@ -57,6 +60,72 @@ function start_program() {
                 return db_connection.end();
             }
         });
+}
+
+function update_employee_role() {
+
+    //get the roles for the user to pick which one to modify
+    dbFunc.view_employeeRoles(db_connection, false, function(err, roles) {
+        if (err) throw err;
+
+        let roleIDQuestion = {
+            type: "list",
+            name: "roleList",
+            message: "Choose the role you want to change:",
+            choices: roles
+        }
+        inquirer.prompt(roleIDQuestion)
+            .then((response) => {
+
+                let roleName = response.roleList;
+
+                dbFunc.view_departments(db_connection, false, function(err, departments) {
+                    if (err) throw err;
+
+                    let deptQuestions = {
+                        type: "list",
+                        name: "departmentList",
+                        message: "Choose the department you want to move the role to:",
+                        choices: departments
+                    }
+
+                    inquirer.prompt(deptQuestions)
+                    .then((response) => {
+
+                        //store the new department name
+                        let newDepartment = response.departmentList;
+
+                        //this will get the role and department ids for the role they are changing
+                        dbFunc.get_role_department_id(roleName, db_connection, function(err, roleData) {
+
+                            if (err) throw err;
+
+                            let existingRoleID = roleData[0];
+                            let existingDepartID = roleData[1];
+
+                            inquirer.prompt(questions.addRoleQuestion)
+                             .then((response) => {
+
+                                let role_title = response.role_title;
+                                let role_salary = response.role_salary;
+
+                                dbFunc.update_employee_role(role_title, role_salary, existingRoleID, existingDepartID, newDepartment, db_connection);
+
+                                console.log("");
+                                console.log("");
+                                console.log("******************************************************");
+                                console.log("Employee Role was updated");
+                                console.log("******************************************************");
+                                console.log("");
+
+                                //go back to the start
+                                start_program();
+                             });
+                        });
+                    });
+                });
+            });
+    });
 }
 
 function add_employee() {

@@ -1,99 +1,46 @@
 # Track_Employee
-Command line application to organize and track employees
 
+Command line application to organize and track employees.
 
-* **department**:
+*Link: https://github.com/Kina-rain/Track_Employee
 
-  * **id** - INT PRIMARY KEY
-  * **name** - VARCHAR(30) to hold department name
+## Description
 
-* **role**:
+This project is to build a command-line application that at allows a user to add and view departments, roles, employees and update employee roles. Business owners will able to organize their employees and departments using this application. 
 
-  * **id** - INT PRIMARY KEY
-  * **title** -  VARCHAR(30) to hold role title
-  * **salary** -  DECIMAL to hold role salary
-  * **department_id** -  INT to hold reference to department role belongs to
+## How to Install & Operate Employee Tracker Application:
 
-* **employee**:
+1. Clone git hub repository and pull it up in VS Code.
 
-  * **id** - INT PRIMARY KEY
-  * **first_name** - VARCHAR(30) to hold employee first name
-  * **last_name** - VARCHAR(30) to hold employee last name
-  * **role_id** - INT to hold reference to role employee has
-  * **manager_id** - INT to hold reference to another employee that manager of the current employee. This field may be null if the employee has no manager
-  
-Build a command-line application that at a minimum allows the user to:
+2. Open a terminal in VS Code and run the following command:
 
-  * Add departments, roles, employees
+  - npm install
 
-  * View departments, roles, employees
+3. Open the seed.sql file in the project, select all by pressing ctrl-a and copy it to the clipboard.
 
-  * Update employee roles
+4. Open SQL workbench and paste into a new SQL tab for queries.
 
-Bonus points if you're able to:
+5. Execute the script to create the database for this application.
 
-  * Update employee managers
+6. In the VS Code Terminal window type the following command: 
 
-  * View employees by manager
+  - node server (and enter)
 
-  * Delete departments, roles, and employees
+7. Follow the on screen intruction using the Employee Tracker. 
 
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+  - use the up and down arrows to select the desired function in the menu.
 
-We can frame this challenge as follows:
+## References
 
-```
-As a business owner
-I want to be able to view and manage the departments, roles, and employees in my company
-So that I can organize and plan my business
-```
+* [MySQL](https://www.npmjs.com/package/mysql) NPM package to connect to your MySQL database and perform queries.
 
-How do you deliver this? Here are some guidelines:
+* [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3) NPM package to interact with the user via the command-line.
 
-* Use the [MySQL](https://www.npmjs.com/package/mysql) NPM package to connect to your MySQL database and perform queries.
+* [console.table](https://www.npmjs.com/package/console.table) to print MySQL rows to the console and format a table using console.table.
 
-* Use [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3) NPM package to interact with the user via the command-line.
+* Stackoverflow
 
-* Use [console.table](https://www.npmjs.com/package/console.table) to print MySQL rows to the console. There is a built-in version of `console.table`, but the NPM package formats the data a little better for our purposes.
+* w3schools.com 
 
-* You may wish to have a separate file containing functions for performing specific SQL queries you'll need to use. Could a constructor function or a class be helpful for organizing these?
+* [SQL Bolt](https://sqlbolt.com/) for some extra MySQL help.
 
-* You will need to perform a variety of SQL JOINS to complete this assignment, and it's recommended you review the week's activities if you need a refresher on this.
-
-![Employee Tracker](Assets/employee-tracker.gif)
-
-### Hints
-
-* You may wish to include a `seed.sql` file to pre-populate your database. This will make development of individual features much easier.
-
-* Focus on getting the basic functionality completed before working on more advanced features.
-
-* Review the week's activities for a refresher on MySQL.
-
-* Check out [SQL Bolt](https://sqlbolt.com/) for some extra MySQL help.
-
-## Minimum Requirements
-
-* Functional application.
-
-* GitHub repository with a unique name and a README describing the project.
-
-* The command-line application should allow users to:
-
-  * Add departments, roles, employees
-
-  * View departments, roles, employees
-
-  * Update employee roles
-
-## Bonus
-
-* The command-line application should allow users to:
-
-  * Update employee managers
-
-  * View employees by manager
-
-  * Delete departments, roles, and employees
-
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
